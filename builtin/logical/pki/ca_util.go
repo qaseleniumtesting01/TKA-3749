@@ -48,6 +48,7 @@ func (b *backend) getGenerationParams(ctx context.Context, storage logical.Stora
 		KeyType:                   keyType,
 		KeyBits:                   keyBits,
 		SignatureBits:             data.Get("signature_bits").(int),
+		UsePSS:                    new(bool),
 		AllowLocalhost:            true,
 		AllowAnyName:              true,
 		AllowIPSANs:               true,
@@ -67,6 +68,12 @@ func (b *backend) getGenerationParams(ctx context.Context, storage logical.Stora
 		CNValidations:             []string{"disabled"},
 	}
 	*role.AllowWildcardCertificates = true
+
+	usePSS, present := data.GetOk("use_pss")
+	if !present {
+		usePSS = false
+	}
+	*role.UsePSS = usePSS.(bool)
 
 	if role.KeyBits, role.SignatureBits, err = certutil.ValidateDefaultOrValueKeyTypeSignatureLength(role.KeyType, role.KeyBits, role.SignatureBits); err != nil {
 		errorResp = logical.ErrorResponse(err.Error())
