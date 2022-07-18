@@ -202,10 +202,10 @@ fmtcheck:
 fmt:
 	find . -name '*.go' | grep -v pb.go | grep -v vendor | xargs gofumpt -w
 
-semgrep: 
+semgrep:
 	semgrep --include '*.go' --exclude 'vendor' -a -f tools/semgrep .
 
-semgrep-ci: 
+semgrep-ci:
 	semgrep --error --include '*.go' --exclude 'vendor' -f tools/semgrep/ci .
 
 assetcheck:
@@ -255,7 +255,7 @@ ci-verify:
 # This is used for release builds by .github/workflows/build.yml
 build:
 	@echo "--> Building Vault $(VAULT_VERSION)"
-	@go build -v -tags "$(GO_TAGS)" -ldflags " -X github.com/hashicorp/vault/sdk/version.Version=$(VAULT_VERSION) -X github.com/hashicorp/vault/sdk/version.GitCommit=$(VAULT_REVISION) -X github.com/hashicorp/vault/sdk/version.BuildDate=$(VAULT_BUILD_DATE)" -o dist/
+	@go build -v -tags "$(GO_TAGS)" -ldflags "$(LD_FLAGS) -X github.com/hashicorp/vault/sdk/version.Version=$(VAULT_VERSION) -X github.com/hashicorp/vault/sdk/version.GitCommit=$(VAULT_REVISION) -X github.com/hashicorp/vault/sdk/version.BuildDate=$(VAULT_BUILD_DATE)" -o dist/
 
 .PHONY: version
 # This is used for release builds by .github/workflows/build.yml
